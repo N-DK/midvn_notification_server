@@ -1,5 +1,6 @@
 import { PoolConnection } from 'mysql2';
 import DatabaseModel from './database.model';
+import { tables } from '../constants/tableName.constant';
 
 class TempleNotificationModel extends DatabaseModel {
     constructor() {
@@ -10,7 +11,7 @@ class TempleNotificationModel extends DatabaseModel {
         try {
             const res = await this.select(
                 con,
-                'tbl_temple_notification',
+                tables.tableTemplateNotification,
                 '*',
                 'content IS NOT NULL',
                 [],
@@ -31,7 +32,7 @@ class TempleNotificationModel extends DatabaseModel {
 
             const res = await this.select(
                 con,
-                'tbl_temple_notification',
+                tables.tableTemplateNotification,
                 '*',
                 'keyword = ?',
                 [keyword],
@@ -57,7 +58,11 @@ class TempleNotificationModel extends DatabaseModel {
                 note: body.note,
             };
 
-            const res = await this.insert(con, 'tbl_temple_notification', data);
+            const res = await this.insert(
+                con,
+                tables.tableTemplateNotification,
+                data,
+            );
             return res;
         } catch (error) {
             throw error;
@@ -70,7 +75,7 @@ class TempleNotificationModel extends DatabaseModel {
 
             const res = await this.delete(
                 con,
-                'tbl_temple_notification',
+                tables.tableTemplateNotification,
                 'keyword = ?',
                 [keyword],
             );
@@ -97,7 +102,7 @@ class TempleNotificationModel extends DatabaseModel {
 
             const res = await this.update(
                 con,
-                'tbl_temple_notification',
+                tables.tableTemplateNotification,
                 data,
                 'keyword',
                 [keyword],
