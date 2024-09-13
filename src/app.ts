@@ -40,8 +40,8 @@ initDB();
 // initRedis();
 
 //init mqtt client
-import { initMqtt } from './config/mqtt.config';
-initMqtt();
+// import { initMqtt } from './config/mqtt.config';
+// initMqtt();
 
 // import routes
 import route from './routes';

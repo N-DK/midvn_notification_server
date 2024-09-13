@@ -39,7 +39,10 @@ class NotificationModel extends DatabaseModel {
                 [user_id],
             )) as any[];
 
-            const userIds = users.map((item) => item.user_id).join(',');
+            let userIds = users?.map((item) => item.user_id).join(',');
+            userIds =
+                userIds.trim() === '' ? user_id : `${user_id}, ${userIds}`;
+
             const whereClause = `user_id IN (${userIds})`;
 
             userTokens = await this.select(
@@ -60,7 +63,9 @@ class NotificationModel extends DatabaseModel {
             );
         }
 
-        const tokens = (userTokens as any[]).map((item) => item.token);
+        let tokens = (userTokens as any[]).map((item) => item.token);
+
+        console.log('tokens', tokens);
 
         const messages = tokens.map((token) => ({
             notification: { title, body },
@@ -69,6 +74,8 @@ class NotificationModel extends DatabaseModel {
 
         try {
             const response = await admin.messaging().sendEach(messages);
+
+            console.log('response', response);
 
             if (response.failureCount === 0) {
                 await this.insert(con, tables.tableNotification, {

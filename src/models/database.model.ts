@@ -16,6 +16,7 @@ class DatabaseModel {
     ) {
         return await new Promise((resolve, reject) => {
             const query = `SELECT ${fields} FROM ${tableName} WHERE ${where} ORDER BY ${orderByField} ${orderBySort} LIMIT ${offset},${limit}`;
+
             db.query(
                 query,
                 conditions,
