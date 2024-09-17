@@ -65,8 +65,6 @@ class NotificationModel extends DatabaseModel {
 
         let tokens = (userTokens as any[]).map((item) => item.token);
 
-        console.log('tokens', tokens);
-
         const messages = tokens.map((token) => ({
             notification: { title, body },
             token,
@@ -75,9 +73,26 @@ class NotificationModel extends DatabaseModel {
         try {
             const response = await admin.messaging().sendEach(messages);
 
-            console.log('response', response);
+            console.log(`Đã gửi thành công ${response.successCount} thông báo`);
 
-            if (response.failureCount === 0) {
+            response.responses.forEach((result, index) => {
+                const error = result.error;
+                if (error) {
+                    // Xóa token không hợp lệ
+                    if (
+                        error.code ===
+                        'messaging/registration-token-not-registered'
+                    ) {
+                        // Xử lý logic xóa token trong cơ sở dữ liệu của bạn
+                        console.log(
+                            'Token không hợp lệ, cần phải xóa:',
+                            tokens[index],
+                        );
+                    }
+                }
+            });
+
+            if (response.successCount > 0) {
                 await this.insert(con, tables.tableNotification, {
                     user_id: user_id ?? null,
                     description: body,
